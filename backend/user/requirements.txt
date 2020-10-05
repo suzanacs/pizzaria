@@ -1,0 +1,9 @@
+flask
+blinker
+mysql-connector-python
+mysqlclient
+flask_sqlalchemy
+flask_marshmallow
+bcrypt
+freeze
+pyjwt
