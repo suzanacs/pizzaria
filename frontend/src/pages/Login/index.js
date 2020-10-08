@@ -40,7 +40,9 @@ const Login = ({navigation}) =>{
                         </Grid>
                         <Grid>
                             <Cell desktopSize={6} tabletSize={7}>
-                                <Button flat primary swapTheming onClick={() => {console.log(email,password)}}>Entrar</Button>
+                                <Button flat primary swapTheming onClick={() => {console.log(email,password)}}
+                                        component={Link}
+                                        to="/Home">Entrar</Button>
                             </Cell>
                         </Grid>
                         <Grid>
