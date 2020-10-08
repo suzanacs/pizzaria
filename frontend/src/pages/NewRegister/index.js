@@ -1,11 +1,13 @@
 import React, {useState} from 'react'
 import { Grid, Cell, Card, CardText, TextField, DatePicker, Button  } from 'react-md';
+import api from '../../services/api'
 
 import {Link} from 'react-router-dom'
 
 const style = { maxWidth: 1200 };
 
 const NewRegister = () => {
+
 
     const [name, setName] = useState('') 
     const [dataNasc, setDataNasc] = useState('')
@@ -16,9 +18,36 @@ const NewRegister = () => {
     const [bairro, setBairro] = useState('')
     const [city, setCity] = useState('')
     const [state, setState] = useState('')
+    const [celPhone, setcelPhone] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+
+    async function handleNewRegister() {
+        console.log(dataNasc)
+        const response = await api.post('/users', {
+            'nome': name,
+            'cpf': cpf,
+            'celular': celPhone,
+            'dtNasc': '1999-12-21',
+            'email': email,
+            'senha': password,
+            'endereco': {
+                'rua': street,
+                'numero': numHouse,
+                'cep': cep,
+                'bairro': bairro,
+                'cidade': city,
+                'estado': state
+            }        
+        })
+
+        if(response.data){
+            console.log("Cadastro realizado com sucesso!")
+        }else{
+            console.log("Email/CPf já cadastrado.")
+        }
+    }
 
     return(
       
@@ -125,6 +154,15 @@ const NewRegister = () => {
                             onChange={event => setEmail(event.valueOf('email'))}
                         /> 
                         </Cell>
+                        <Cell desktopSize={4} tabletSize={5}>
+                        <TextField
+                            id='celPhone'
+                            label='Celular'
+                            type='number'
+                            value={celPhone}
+                            onChange={event => setcelPhone(event.valueOf('celPhone'))}
+                        /> 
+                        </Cell>
                     </Grid>
                     <Grid>
                         <Cell desktopSize={5} tabletSize={4}>  
@@ -148,7 +186,7 @@ const NewRegister = () => {
                     </Grid>
                     <Grid>
                     <Cell desktopSize={2} tabletSize={2}>
-                        <Button flat primary swapTheming onClick={()=>{console.log(name,dataNasc,cpf,street,numHouse,cep,bairro,city,state,email,password,confirmPassword)}}>Cadastrar</Button>
+                        <Button flat primary swapTheming onClick={handleNewRegister}>Cadastrar</Button>
                     </Cell>
                     <Cell desktopSize={2} tabletSize={2}>
                         <Button flat primary swapTheming
