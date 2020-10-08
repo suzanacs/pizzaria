@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  pizzaria-mysql:
+    image: mysql
+    container_name: pizzaria-mysql
+    hostname: pizzaria-mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: gui123
+    networks:
+      - pizzaria-app
+networks:
+  pizzaria-app:
+    external: true
