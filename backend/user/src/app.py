@@ -18,7 +18,7 @@ def root(current_user):
     return jsonify({'message': f'Hello {current_user.email}'})
 
 @app.route('/users', methods=['POST'])
-@cross_origin()
+#@cross_origin()
 #@token_required
 #def createUser(current_user):
 def createUser():
