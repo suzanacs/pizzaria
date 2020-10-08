@@ -4,6 +4,7 @@ mysql-connector-python
 mysqlclient
 flask_sqlalchemy
 flask_marshmallow
+flask-cors
 bcrypt
 freeze
 pyjwt

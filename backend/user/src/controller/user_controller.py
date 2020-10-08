@@ -55,7 +55,7 @@ class UsuarioController():
                     msg = jsonify({'message': 'User created successfully', 'data': result})
                 except:
                     db.session.rollback()
-                    return jsonify({'message': 'An error occured', 'data': {}}), 401
+                    return jsonify({'message': 'Failed to create user!', 'data': {}}), 401
         return msg
 
     @classmethod

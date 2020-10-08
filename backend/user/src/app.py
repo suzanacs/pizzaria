@@ -1,12 +1,15 @@
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS, cross_origin
 from controller.user_controller import UsuarioController
 from controller.helper import auth, token_required
 
 app = Flask("universodapizza")
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:gui123@pizzaria-mysql:3306/pizzaria?auth_plugin=mysql_native_password&autocommit=true"
 app.config['SQLALCHEMY_ECHO'] = True
+app.config['CORS_HEADERS'] = 'Content-Type'
 db = SQLAlchemy(app)
+cors = CORS(app)
     
 
 @app.route('/', methods=['GET'])
@@ -15,6 +18,7 @@ def root(current_user):
     return jsonify({'message': f'Hello {current_user.email}'})
 
 @app.route('/users', methods=['POST'])
+@cross_origin()
 #@token_required
 #def createUser(current_user):
 def createUser():
