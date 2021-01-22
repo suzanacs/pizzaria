@@ -1,6 +1,11 @@
 import React, {useState} from 'react'
 import { Grid, Cell, Card, CardText, TextField, DatePicker, Button  } from 'react-md';
 import api from '../../services/api'
+import moment from 'moment'
+import {cpfMask} from '../../utils/cpfMask'
+import {cepMask} from '../../utils/cepMask'
+import {phoneMask} from '../../utils/phoneMask'
+
 
 import {Link} from 'react-router-dom'
 
@@ -24,31 +29,38 @@ const NewRegister = () => {
     const [confirmPassword, setConfirmPassword] = useState('')
 
     async function handleNewRegister() {
-        console.log(dataNasc)
-        const response = await api.post('/users', {
-            'nome': name,
-            'cpf': cpf,
-            'celular': celPhone,
-            'dtNasc': '1999-12-21',
-            'email': email,
-            'senha': password,
-            'endereco': {
-                'rua': street,
-                'numero': numHouse,
-                'cep': cep,
-                'bairro': bairro,
-                'cidade': city,
-                'estado': state
-            }        
-        })
 
-        if(response.data){
-            console.log("Cadastro realizado com sucesso!")
+        if(password===confirmPassword){
+            
+            const response = await api.post('/users', {
+                'nome': name,
+                'cpf': cpf,
+                'celular': celPhone,
+                'dtNasc': dataNasc, 
+                'email': email,
+                'senha': password,
+                'endereco': {
+                    'rua': street,
+                    'numero': numHouse,
+                    'cep': cep,
+                    'bairro': bairro,
+                    'cidade': city,
+                    'estado': state
+                }        
+            })
+        
+            console.log(response.data)
+            console.log(response)
+            if(response.data.data){
+                alert("Cadastro realizado com sucesso!")
+            }   
+            else {
+                alert('Email/CPF já cadastrado(s)!')
+            }
         }else{
-            console.log("Email/CPf já cadastrado.")
+            alert("as senhas não são iguais")
         }
     }
-
     return(
       
        
@@ -62,7 +74,8 @@ const NewRegister = () => {
                         <TextField
                            id='name'
                            label='Nome completo'
-                           placeholder='Nome Completo'     
+                           placeholder='Nome Completo'    
+                           maxLength={90} 
                            value={name}
                            onChange={event => setName(event.valueOf('name'))}                 
                         />
@@ -71,8 +84,8 @@ const NewRegister = () => {
                         <DatePicker
                             id="dataNasc"
                             label="Data de Nascimento"
-                            value={dataNasc}
-                            onChange={event => setDataNasc(event.valueOf('dataNasc'))}
+                            onChange={val => setDataNasc(moment(val, 'DD/MM/YYYY').toISOString(true).substring(0, 10), 'dataNasc')}
+                            formatOptions={{ year: 'numeric', month: 'numeric', day: 'numeric' }}
                         />
                         </Cell>
                         <Cell desktopSize={3} tabletSize={4}>
@@ -80,8 +93,9 @@ const NewRegister = () => {
                                 id='cpf'
                                 label='CPF'
                                 type='text'
+                                maxLength={15}
                                 value={cpf}
-                                onChange={event => setCpf(event.valueOf('cpf'))}
+                                onChange={event => setCpf(cpfMask(event.valueOf('cpf')))}
                             />
                         </Cell>
                     </Grid>
@@ -91,6 +105,7 @@ const NewRegister = () => {
                                 id='street'
                                 label='Rua'
                                 type='text'
+                                maxLength={90}
                                 value={street}
                                 onChange={event => setStreet(event.valueOf('street'))}
                             />
@@ -100,6 +115,7 @@ const NewRegister = () => {
                                 id='numHouse'
                                 label='Número'
                                 type='number'
+                                maxLength={6}
                                 value={numHouse}
                                 onChange={event => setNumHouse(event.valueOf('numHouse'))}
 
@@ -109,9 +125,10 @@ const NewRegister = () => {
                             <TextField 
                                 id='cep'
                                 label='CEP'
-                                type='number'
+                                type='text'
                                 value={cep}
-                                onChange={event => setCep(event.valueOf('cep'))}
+                                maxLength={9}
+                                onChange={event => setCep(cepMask(event.valueOf('cep')))}
                             />
                         </Cell>
                     </Grid>
@@ -122,6 +139,7 @@ const NewRegister = () => {
                                 label='Bairro'
                                 type='text'
                                 value={bairro}
+                                maxLength={30}
                                 onChange={event => setBairro(event.valueOf('bairro'))}
                             />
                         </Cell>
@@ -131,15 +149,17 @@ const NewRegister = () => {
                                 label='Cidade'
                                 type='text'
                                 value={city}
+                                maxLength={30}
                                 onChange={event => setCity(event.valueOf('city'))}
                             />
                         </Cell>
-                        <Cell desktopSize={4} tabletSize={5}>
+                        <Cell desktopSize={1} tabletSize={2}>
                             <TextField 
                                 id='state'
                                 label='Estado'
                                 type='text'
                                 value={state}
+                                maxLength={2}
                                 onChange={event => setState(event.valueOf('state'))}
                             />
                         </Cell>
@@ -151,6 +171,7 @@ const NewRegister = () => {
                             label='Email'
                             type='email'
                             value={email}
+                            maxLength={60}
                             onChange={event => setEmail(event.valueOf('email'))}
                         /> 
                         </Cell>
@@ -158,9 +179,10 @@ const NewRegister = () => {
                         <TextField
                             id='celPhone'
                             label='Celular'
-                            type='number'
+                            type='text'
                             value={celPhone}
-                            onChange={event => setcelPhone(event.valueOf('celPhone'))}
+                            maxLength={15}
+                            onChange={event => setcelPhone(phoneMask(event.valueOf('celPhone')))}
                         /> 
                         </Cell>
                     </Grid>
